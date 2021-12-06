@@ -172,10 +172,18 @@ renderHighchart({
     filter(year == input$selected_year) %>% 
     dplyr::count(zipcode)
 
+  
   highchart() %>%
-    hc_title(text = "NYC Shooting Density") %>%
-    hc_subtitle(text = "by Zip-code") %>% 
+    hc_title(
+      text = "NYC Shooting Density",
+      style = list(fontSize = "24px", color = "#000000", fontWeight = "bold")
+    ) %>%
+    hc_subtitle(
+      text = "by Zip-code",
+      style = list(fontSize = "12px", color = "#000000", fontStyle = "italic")
+    ) %>% 
     hc_add_series_map(nyczipgeojson, zip_count, 
+      name = "Number of Shooting Cases:",
       value = "n", 
       joinBy = c("postalCode", "zipcode"),
       dataLabels = list(
@@ -183,14 +191,14 @@ renderHighchart({
         format = "{point.properties.postalcode}"
         )
     ) %>% 
-  hc_legend(
-    valueDecimals = 0, 
-    valueSuffix = "%",
-    align = "right",
-    verticalAlign = "top",
-    layout = "vertical"
-  ) %>%
-  hc_mapNavigation(enabled = TRUE)
+    hc_legend(
+      valueDecimals = 0, 
+      valueSuffix = "%",
+      align = "right",
+      verticalAlign = "top",
+      layout = "vertical"
+    ) %>%
+    hc_mapNavigation(enabled = TRUE)
 
 })
 ```
