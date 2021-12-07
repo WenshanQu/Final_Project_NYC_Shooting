@@ -44,9 +44,9 @@ scale_fill_discrete = scale_fill_viridis_d
 
 
 ```{r import data, include = FALSE}
-history_df = read.csv('historic.csv')
+history_df = read.csv('./data/historic.csv')
 
-year_to_date_df = read.csv('year_to_date.csv') %>% 
+year_to_date_df = read.csv('./data/year_to_date.csv') %>% 
   rename(Lon_Lat = New.Georeferenced.Column)
 ```
 
