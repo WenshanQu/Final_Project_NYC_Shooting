@@ -1,0 +1,13 @@
+name: nyc_shooting_fact
+title: nyc_shooting_fact
+username:
+account: wenshanqu
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5285407
+bundleId: 5340618
+url: https://wenshanqu.shinyapps.io/nyc_shooting_fact/
+when: 1638895362.62245
+lastSyncTime: 1638895362.62246
+asMultiple: FALSE
+asStatic: FALSE

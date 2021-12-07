@@ -201,7 +201,7 @@ fit_df =
     vic_sex = as.factor(vic_sex),
     vic_race = as.factor(vic_race)
   ) %>% 
-  group_by(month, boro, statistical_murder_flag, perp_sex, perp_race, vic_sex, vic_race) %>% 
+  group_by(month, boro, year, statistical_murder_flag, perp_sex, perp_race, vic_sex, vic_race) %>% 
   summarise(
     shooting_number = n()
   ) %>% 
@@ -212,14 +212,16 @@ fit_df =
 fitt_df = 
   fit_df %>% 
   ungroup() %>% 
-  select(shooting_number, boro, perp_sex) %>% 
+  select(shooting_number, boro, perp_sex, year) %>% 
   mutate(
-    boro = fct_recode(boro,   "1" ="BRONX",   "2" ="BROOKLYN",   "3" ="MANHATTAN",  "4" ="QUEENS",  "5" = "STATEN ISLAND"),
+    boro = fct_recode(boro, "1" = "BRONX", "2" = "BROOKLYN", "3" = "MANHATTAN", "4" = "QUEENS",  "5" = "STATEN ISLAND"),
     perp_sex = fct_recode(perp_sex, "1" = "F", "2" = "M", "3" = "U"),
     boro = as.numeric(boro),
-    perp_sex = as.numeric(perp_sex)
+    perp_sex = as.numeric(perp_sex),
+    year = as.numeric(year)
   )
 
+corrplot(cor(fitt_df), type = "upper", diag = FALSE)
 
 fit2 = lm(shooting_number ~ month + boro + perp_sex + perp_race + vic_sex + vic_race, data = fitt_df)
 
