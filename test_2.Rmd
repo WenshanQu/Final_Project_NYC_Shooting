@@ -11,7 +11,7 @@ library(maps)
 library(dplyr)
 library(highcharter)
 library(viridis)
-
+library(leaflet)
 library(rjson)
 library(plotly)
 ```
@@ -243,5 +243,41 @@ cor(fitt_df)
 
 fit_3 = lm(shooting_number ~ boro * perp_sex, data = fitt_df)
 broom::tidy(fit_3)
+```
+
+```{r}
+nyc_shooting = 
+  nyc_shooting %>% 
+  filter(
+    zipcode == 10032
+  ) 
+
+history_raw = read_csv("./data/historic.csv") %>% janitor::clean_names()
+year_2021_raw = read_csv("./data/year_to_date.csv") %>% janitor::clean_names()
+full_raw_label_df = 
+  bind_rows(history_raw, year_2021_raw) %>% 
+  mutate(
+    text_label = str_c("Occur time: ", occur_date, " ", occur_time, " Boro: ", boro)
+  )
+
+
+
+risk_plot = 
+  leaflet(data = nyc_shooting[]) %>% 
+  setView(
+    lng = mean(nyc_shooting$longitude),
+    lat = mean(nyc_shooting$latitude), 
+    zoom = 14
+  ) %>% 
+  addTiles() %>%
+  addProviderTiles("Esri.WorldTopoMap") %>% 
+  addCircleMarkers(
+    ~ longitude,
+    ~ latitude,
+    radius = 5,
+    label = ~ full_raw_label_df$text_label
+  )
+
+risk_plot
 ```
 
