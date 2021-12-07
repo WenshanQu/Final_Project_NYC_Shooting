@@ -11,7 +11,7 @@ library(maps)
 library(dplyr)
 library(highcharter)
 library(viridis)
-
+library(leaflet)
 library(rjson)
 library(plotly)
 ```
@@ -201,7 +201,7 @@ fit_df =
     vic_sex = as.factor(vic_sex),
     vic_race = as.factor(vic_race)
   ) %>% 
-  group_by(month, boro, statistical_murder_flag, perp_sex, perp_race, vic_sex, vic_race) %>% 
+  group_by(month, boro, year, statistical_murder_flag, perp_sex, perp_race, vic_sex, vic_race) %>% 
   summarise(
     shooting_number = n()
   ) %>% 
@@ -212,14 +212,16 @@ fit_df =
 fitt_df = 
   fit_df %>% 
   ungroup() %>% 
-  select(shooting_number, boro, perp_sex) %>% 
+  select(shooting_number, boro, perp_sex, year) %>% 
   mutate(
-    boro = fct_recode(boro,   "1" ="BRONX",   "2" ="BROOKLYN",   "3" ="MANHATTAN",  "4" ="QUEENS",  "5" = "STATEN ISLAND"),
+    boro = fct_recode(boro, "1" = "BRONX", "2" = "BROOKLYN", "3" = "MANHATTAN", "4" = "QUEENS",  "5" = "STATEN ISLAND"),
     perp_sex = fct_recode(perp_sex, "1" = "F", "2" = "M", "3" = "U"),
     boro = as.numeric(boro),
-    perp_sex = as.numeric(perp_sex)
+    perp_sex = as.numeric(perp_sex),
+    year = as.numeric(year)
   )
 
+corrplot(cor(fitt_df), type = "upper", diag = FALSE)
 
 fit2 = lm(shooting_number ~ month + boro + perp_sex + perp_race + vic_sex + vic_race, data = fitt_df)
 
@@ -241,5 +243,41 @@ cor(fitt_df)
 
 fit_3 = lm(shooting_number ~ boro * perp_sex, data = fitt_df)
 broom::tidy(fit_3)
+```
+
+```{r}
+nyc_shooting = 
+  nyc_shooting %>% 
+  filter(
+    zipcode == 10032
+  ) 
+
+history_raw = read_csv("./data/historic.csv") %>% janitor::clean_names()
+year_2021_raw = read_csv("./data/year_to_date.csv") %>% janitor::clean_names()
+full_raw_label_df = 
+  bind_rows(history_raw, year_2021_raw) %>% 
+  mutate(
+    text_label = str_c("Occur time: ", occur_date, " ", occur_time, " Boro: ", boro)
+  )
+
+
+
+risk_plot = 
+  leaflet(data = nyc_shooting[]) %>% 
+  setView(
+    lng = mean(nyc_shooting$longitude),
+    lat = mean(nyc_shooting$latitude), 
+    zoom = 14
+  ) %>% 
+  addTiles() %>%
+  addProviderTiles("Esri.WorldTopoMap") %>% 
+  addCircleMarkers(
+    ~ longitude,
+    ~ latitude,
+    radius = 5,
+    label = ~ full_raw_label_df$text_label
+  )
+
+risk_plot
 ```
 
