@@ -33,12 +33,10 @@ nyc_time =
     hour = as.factor(hour)
   )
 
-history_raw = read_csv("./data/historic.csv") %>% janitor::clean_names()
-year_2021_raw = read_csv("./data/year_to_date.csv") %>% janitor::clean_names()
-full_raw_label_df = 
-  bind_rows(history_raw, year_2021_raw) %>% 
+label_df = 
+  nyc_shooting %>% 
   mutate(
-    text_label = str_c("Occur time: ", occur_date, " ", occur_time, " Boro: ", boro)
+    label_text = str_c("Year: ", year, " Time: ", occur_time)
   )
 ```
 
@@ -80,7 +78,7 @@ risk_plot =
     ~ longitude,
     ~ latitude,
     radius = 5,
-    label = ~ full_raw_label_df$text_label
+    label = ~ label_df$label_text
   )
 
 risk_plot
