@@ -11,8 +11,6 @@ library(maps)
 library(dplyr)
 library(highcharter)
 library(viridis)
-library(forecast)
-library(treemap)
 
 library(rjson)
 library(plotly)
@@ -183,5 +181,65 @@ renderPlotly({
   
   fig
 })
+```
+
+
+## MlR
+
+```{r}
+fit_df = 
+  nyc_shooting %>% 
+  select(month, day, year, boro, statistical_murder_flag, perp_race, perp_sex, vic_race, vic_sex) %>% 
+  mutate(
+    month = as.factor(month), 
+    day = as.factor(day), 
+    year = as.factor(year),
+    boro = as.factor(boro), 
+    statistical_murder_flag = as.factor(statistical_murder_flag),
+    perp_sex = as.factor(perp_sex),
+    perp_race = as.factor(perp_race),
+    vic_sex = as.factor(vic_sex),
+    vic_race = as.factor(vic_race)
+  ) %>% 
+  group_by(month, boro, statistical_murder_flag, perp_sex, perp_race, vic_sex, vic_race) %>% 
+  summarise(
+    shooting_number = n()
+  ) %>% 
+  mutate(
+    shooting_number = 1 / shooting_number
+  )
+
+fitt_df = 
+  fit_df %>% 
+  ungroup() %>% 
+  select(shooting_number, boro, perp_sex) %>% 
+  mutate(
+    boro = fct_recode(boro,   "1" ="BRONX",   "2" ="BROOKLYN",   "3" ="MANHATTAN",  "4" ="QUEENS",  "5" = "STATEN ISLAND"),
+    perp_sex = fct_recode(perp_sex, "1" = "F", "2" = "M", "3" = "U"),
+    boro = as.numeric(boro),
+    perp_sex = as.numeric(perp_sex)
+  )
+
+
+fit2 = lm(shooting_number ~ month + boro + perp_sex + perp_race + vic_sex + vic_race, data = fitt_df)
+
+MASS::boxcox(mult_fit)
+
+mult_fit = lm(shooting_number ~ ., data = fitt_df)
+summary(mult_fit)
+
+step(mult_fit, direction = 'backward')
+
+```
+
+```{r}
+library(corrplot)
+corrplot(cor(fitt_df), type = "upper", diag = FALSE)
+pairs(fit_df)
+cor(fitt_df)
+
+
+fit_3 = lm(shooting_number ~ boro * perp_sex, data = fitt_df)
+broom::tidy(fit_3)
 ```
 
