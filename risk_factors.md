@@ -12,15 +12,15 @@ in the dataset were listed below:
 -   ‘month’. month of the shooting incident
 -   ‘day’. day of the shooting incident
 -   ‘boro’. borough where the shooting incident occurred
--   ‘location_desc’. location of the shooting incident
--   ‘statistical_murder_flag’. Shooting resulted in the victim’s death
+-   ‘location\_desc’. location of the shooting incident
+-   ‘statistical\_murder\_flag’. Shooting resulted in the victim’s death
     which would be counted as a murder
--   ‘perp_age_group’. perpetrator’s age within a category
--   ‘perp_sex’. perpetrator’s sex description
--   ‘perp_race’. perpetrator’s race description
--   ‘vic_age_group’. victim’s age within a category
--   ‘vic_sex’. victim’s sex description
--   ‘vic_race’. victim’s race description
+-   ‘perp\_age\_group’. perpetrator’s age within a category
+-   ‘perp\_sex’. perpetrator’s sex description
+-   ‘perp\_race’. perpetrator’s race description
+-   ‘vic\_age\_group’. victim’s age within a category
+-   ‘vic\_sex’. victim’s sex description
+-   ‘vic\_race’. victim’s race description
 -   ‘zipcode’. zipcode of the shooting incident
 
 ## Multiple linear regression model
@@ -28,7 +28,7 @@ in the dataset were listed below:
 ### Box-Cox transformation
 
 The box-cox method is applied in the model to determine the
-transformation of outcome variable. The variable ‘location_desc’
+transformation of outcome variable. The variable ‘location\_desc’
 includes too many missing value. It was not included in the multiple
 linear regression analysis. All the missing values from our dataset was
 omitted. The λ is close to - 2, 1 / Y transformation is applied.
