@@ -281,3 +281,10 @@ risk_plot =
 risk_plot
 ```
 
+```{r}
+test_df = read_csv("./comp_data/Full NYC Shooting Data (2006-2021).csv")
+
+test_df %>% 
+  filter(zipcode == 10032)
+```
+
