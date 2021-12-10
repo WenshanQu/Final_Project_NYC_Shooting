@@ -5,9 +5,9 @@ account: wenshanqu
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5285407
-bundleId: 5340618
+bundleId: 5352773
 url: https://wenshanqu.shinyapps.io/nyc_shooting_fact/
-when: 1638895362.62245
-lastSyncTime: 1638895362.62246
+when: 1639091694.49805
+lastSyncTime: 1639091694.49806
 asMultiple: FALSE
 asStatic: FALSE
